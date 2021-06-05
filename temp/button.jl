@@ -11,26 +11,24 @@ provider = CssProviderLeaf(filename = style_file)
 
 #provider = CssProviderLeaf(data="#green_button {color:blue;}")
 
-
+using Gtk, Gtk.ShortNames
 w = Window("")
 button = GtkButton("")
+sc = Gtk.GAccessor.style_context(button)
+pr = CssProviderLeaf(data="#green_button {color:green;}")
+push!(sc, StyleProvider(pr), 600)
 set_gtk_property!(button, :name, "green_button")
 push!(w, button)
-screen = Gtk.GAccessor.style_context(button)
-push!(screen, StyleProvider(provider), 600)
 Gtk.showall(w)
 
 
-
+using Gtk, Gtk.ShortNames
 win = Window("Test")
-lbl = Label("Some text")
-
-sc = Gtk.GAccessor.style_context(lbl)
+label = Label("Some text")
+sc = Gtk.GAccessor.style_context(label)
 pr = CssProviderLeaf(data="#blue_text {color:blue;}")
 push!(sc, StyleProvider(pr), 600)
-
-set_gtk_property!(lbl, :name, "blue_text")
-
-push!(win, lbl)
+set_gtk_property!(label, :name, "blue_text")
+push!(win, label)
 showall(win)
 
