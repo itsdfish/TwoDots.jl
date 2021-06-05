@@ -1,5 +1,8 @@
 module TwoDots
-
-# Write your package code here.
-
+    using Gtk, Cairo
+    export Dot, Game, generate_gui
+    
+    include("structs.jl")
+    include("functions.jl")
+    include("gui.jl")
 end
