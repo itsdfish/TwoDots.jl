@@ -12,12 +12,12 @@ function setup_menu(gui, game)
     return mb
 end
 
-function generate_gui(; width=1500, height=600)
+function generate_gui(; width=900, height=700)
     game = Game()
     generate_gui(game; width, height)
 end
 
-function generate_gui(game; width=1500, height=600)
+function generate_gui(game; width=900, height=700)
     win = GtkWindow("Two Dots", width, height)
     generate_gui!(game, win)
     return win
@@ -40,7 +40,7 @@ function generate_gui!(game, win)
     push!(sc, StyleProvider(style), 600)
     push!(info_panel, label)
 
-    round_count = GtkLabel(string(game.rounds), name="round_count")
+    round_count = GtkLabel(string(game.round), name="round_count")
     sc = Gtk.GAccessor.style_context(round_count)
     push!(sc, StyleProvider(style), 600)
     push!(info_panel, round_count)
@@ -108,19 +108,20 @@ function make_grey!(button, dot, style)
     label = button[1]
     sc = Gtk.GAccessor.style_context(label)
     push!(sc, StyleProvider(style), 600)
-    set_gtk_property!(label, :name, "grey")
+    set_gtk_property!(label, :name, string(dot.color,"_clicked"))
 end
 
 function click_submit(button, game, style, gui)
-    update_round!(game, gui) # if statement
+    game_over!(game) ? (return nothing) : nothing
+    update_round!(game, gui)
     if is_rectangular(game)
         game.selected_dots = select_all_color!(game)
     end
-    update_score!(game)
     update_score!(game, gui)
     shift_colors!(game, gui, style)
     set_unselected!(game)
     clear_selected!(game)
+    return nothing
 end
 
 function clear_selected!(game)
@@ -158,16 +159,17 @@ function update_score!(game)
 end
 
 function update_round!(game)
-    game.rounds -= 1
+    game.round -= 1
 end
 
 function update_round!(game, gui)
     update_round!(game)
     score = gui[1][2][2]
-    set_gtk_property!(score, :label, string(game.rounds))
+    set_gtk_property!(score, :label, string(game.round))
 end 
 
 function update_score!(game, gui)
+    update_score!(game)
     counter = gui[1][2][4]
     set_gtk_property!(counter, :label, string(game.score))
     return nothing

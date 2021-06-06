@@ -12,16 +12,16 @@ end
 mutable struct Game
     dots::Array{Dot,2}
     selected_dots::Vector{Dot}
-    rounds::Int
+    n_rounds::Int
     round::Int
     score::Int
     visible::Bool
 end
 
-function Game(;n_rows=20, n_cols=20, rounds=30, visible=true)
+function Game(;n_rows=10, n_cols=10, n_rounds=30, round=n_rounds, visible=true)
     dots = populate(n_rows, n_cols)
     rand_color!.(dots)
-    Game(dots, Dot[], rounds, 1, 0, visible)
+    Game(dots, Dot[], n_rounds, round, 0, visible)
 end
 
 Broadcast.broadcastable(x::Game) = Ref(x)

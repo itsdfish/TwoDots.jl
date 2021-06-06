@@ -1,6 +1,6 @@
 name = "TwoDots"
 uuid = "6b60b763-0cec-4562-851a-49a11e6530ef"
-authors = ["itsdfish <itsdfish@gmail.com> and contributors"]
+authors = ["itsdfish"]
 version = "0.1.0"
 
 [deps]

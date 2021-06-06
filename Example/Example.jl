@@ -3,8 +3,5 @@ cd(@__DIR__)
 Pkg.activate("..")
 using Revise, TwoDots
 
-game = Game(;n_rows=8, n_cols=8)
-
-#map(x->x.color = "green", game.dots)
-
+game = Game()
 gui = generate_gui(game)

@@ -5,6 +5,7 @@ end
 
 populate(n_rows, n_cols) = [Dot(;row, col) for row in 1:n_rows, col in 1:n_cols]
 
+game_over!(game) = game.round == 0
 
 function max_coords(dots)
     min_row = minimum(x->x.row, dots)

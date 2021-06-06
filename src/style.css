@@ -1,51 +1,101 @@
 #green{
-    background-color: rgb(84, 150, 84);
+    background-color: rgb(78, 151, 78);
     color: white;
     font-family: DejaVu Sans;
     font-style: normal;
     font-weight: bold;
-    font-size: 30px;
-    border-radius: 15px;
+    font-size: 40px;
+    border-radius: 155px;
 }
 
 #red{
-    background-color: rgb(128, 73, 73);
+    background-color: rgb(129, 69, 69);
     color: white;
     font-family: DejaVu Sans;
     font-style: normal;
     font-weight: bold;
-    font-size: 30px;
-    border-radius: 15px;
+    font-size: 40px;
+    border-radius: 155px;
 }
 
 #blue{
-    background-color: rgb(102, 107, 149);
+    background-color: rgb(96, 102, 153);
     color: white;
     font-family: DejaVu Sans;
     font-style: normal;
     font-weight: bold;
-    font-size: 30px;
-    border-radius: 15px;
+    font-size: 40px;
+    border-radius: 155px;
 }
 
 #orange{
-    background-color: rgb(201, 154, 100);
+    background-color: rgb(200, 148, 88);
     color: white;
     font-family: DejaVu Sans;
     font-style: normal;
     font-weight: bold;
-    font-size: 30px;
-    border-radius: 15px;
+    font-size: 40px;
+    border-radius: 155px;
 }
 
 #yellow{
-    background-color: rgb(226, 215, 117);
+    background-color: rgb(230, 217, 108);
     color: white;
     font-family: DejaVu Sans;
     font-style: normal;
     font-weight: bold;
-    font-size: 30px;
-    border-radius: 15px;
+    font-size: 40px;
+    border-radius: 155px;
+}
+
+#green_clicked{
+    background-color: rgb(103, 143, 103);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    border-radius: 155px;
+}
+
+#red_clicked{
+    background-color: rgb(131, 106, 106);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    border-radius: 155px;
+}
+
+#blue_clicked{
+    background-color: rgb(127, 130, 156);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    border-radius: 155px;
+}
+
+#orange_clicked{
+    background-color: rgb(204, 180, 152);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    border-radius: 155px;
+}
+
+#yellow_clicked{
+    background-color: rgb(224, 218, 156);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    border-radius: 155px;
 }
 
 #rounds_label{
