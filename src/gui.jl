@@ -1,3 +1,17 @@
+function setup_menu(gui, game)
+    mb = GtkMenuBar(name="menu_bar")
+    file = GtkMenuItem("_File")
+    file_menu = GtkMenu(file, name="file_menu")
+    new_game = GtkMenuItem("New Game", name="new_game")
+    signal_connect(x->start_new_game!(x, gui, game), new_game, :activate)
+    push!(file_menu, new_game)
+    setup = GtkMenuItem("Setup", name="setup")
+    signal_connect(x->setup_game(x, game, gui), setup, :activate)
+    push!(file_menu, setup)
+    push!(mb, file)
+    return mb
+end
+
 function generate_gui(; width=1500, height=600)
     game = Game()
     generate_gui(game; width, height)
@@ -49,7 +63,7 @@ function generate_gui!(game, win)
     push!(submit_button, submit_label)
     sc = Gtk.GAccessor.style_context(submit_label)
     push!(sc, StyleProvider(style), 600)
-    
+
     push!(base_panel, submit_button)
     signal_connect(x->click_submit(x, game, style, win), submit_button, "clicked")
 
@@ -74,6 +88,15 @@ function generate_gui!(game, win)
     showall(win)
 end
 
+select_all_color!(game) = select_all_color!(game.dots, game.selected_dots)
+
+function select_all_color!(dots, selected_dots)
+    color = selected_dots[1].color
+    color_dots = filter(x->x.color == color, dots)
+    map(x->x.selected = true, color_dots)
+    return color_dots
+end
+
 function add_color!(button, dot, style)
     label = button[1]
     sc = Gtk.GAccessor.style_context(label)
@@ -88,21 +111,11 @@ function make_grey!(button, dot, style)
     set_gtk_property!(label, :name, "grey")
 end
 
-function setup_menu(gui, game)
-    mb = GtkMenuBar(name="menu_bar")
-    file = GtkMenuItem("_File")
-    file_menu = GtkMenu(file, name="file_menu")
-    new_game = GtkMenuItem("New Game", name="new_game")
-    signal_connect(x->start_new_game!(x, gui, game), new_game, :activate)
-    push!(file_menu, new_game)
-    setup = GtkMenuItem("Setup", name="setup")
-    signal_connect(x->setup_game(x, game, gui), setup, :activate)
-    push!(file_menu, setup)
-    push!(mb, file)
-    return mb
-end
-
 function click_submit(button, game, style, gui)
+    update_round!(game, gui) # if statement
+    if is_rectangular(game)
+        game.selected_dots = select_all_color!(game)
+    end
     update_score!(game)
     update_score!(game, gui)
     shift_colors!(game, gui, style)
@@ -143,6 +156,16 @@ end
 function update_score!(game)
     game.score += length(game.selected_dots)
 end
+
+function update_round!(game)
+    game.rounds -= 1
+end
+
+function update_round!(game, gui)
+    update_round!(game)
+    score = gui[1][2][2]
+    set_gtk_property!(score, :label, string(game.rounds))
+end 
 
 function update_score!(game, gui)
     counter = gui[1][2][4]
