@@ -1,5 +1,5 @@
 module TwoDots
-    using Gtk, Cairo
+    using Gtk, Cairo, Gtk.ShortNames
     export Dot, Game, generate_gui
     
     include("structs.jl")

@@ -1,11 +1,11 @@
 mutable struct Dot
-    color::Symbol
+    color::String
     selected::Bool
     row::Int
     col::Int
 end
 
-function Dot(;color=:_, selected=false, col, row)
+function Dot(;color="", selected=false, col, row)
     Dot(color, selected, row, col)
 end
 
@@ -20,6 +20,8 @@ end
 
 function Game(;n_rows=20, n_cols=20, rounds=30, visible=true)
     dots = populate(n_rows, n_cols)
-    #rand_color!.(dots)
+    rand_color!.(dots)
     Game(dots, Dot[], rounds, 1, 0, visible)
 end
+
+Broadcast.broadcastable(x::Game) = Ref(x)

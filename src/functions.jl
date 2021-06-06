@@ -1,5 +1,5 @@
 function rand_color!(x::Dot)
-    x.color = rand([:red,:blue,:yellow,:green,:orange])
+    x.color = rand(["red","blue","yellow","green","orange"])
     return nothing
 end
 

@@ -1,0 +1,73 @@
+#green{
+    background-color: rgb(84, 150, 84);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 15px;
+}
+
+#red{
+    background-color: rgb(128, 73, 73);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 15px;
+}
+
+#blue{
+    background-color: rgb(102, 107, 149);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 15px;
+}
+
+#orange{
+    background-color: rgb(201, 154, 100);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 15px;
+}
+
+#yellow{
+    background-color: rgb(226, 215, 117);
+    color: white;
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 15px;
+}
+
+#rounds_label{
+    font-size: 125%;
+}
+
+#round_count{
+    font-size: 125%;
+}
+
+#score_label{
+    font-size: 125%;
+}
+
+#score_value{
+    font-size: 125%;
+}
+
+#info_panel{
+}
+
+#submit_label{
+    font-size: 200%;
+    color: black;
+}
