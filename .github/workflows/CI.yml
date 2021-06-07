@@ -20,18 +20,12 @@ jobs:
           - "nightly"
         os:
           - ubuntu-latest
-          - macos-latest
-          - windows-latest
         julia-arch:
           - x64
           - x86
         include:
           - os: ubuntu-latest
             prefix: xvfb-run
-        # 32-bit Julia binaries are not available on macOS
-        exclude:
-          - os: macOS-latest
-            julia-arch: x86
 
     steps:
       - uses: actions/checkout@v2
