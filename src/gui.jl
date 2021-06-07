@@ -12,12 +12,25 @@ function setup_menu(gui, game)
     return mb
 end
 
-function generate_gui(; width=900, height=700)
+start_new_game!(x, gui, game) = start_new_game!(gui, game)
+
+function start_new_game!(gui, game)
+    println("start new game")
+    game.score = 0
+    game.round = game.n_rounds
+    rand_color!.(game.dots)
+    map(x->x.selected = false, game.dots)
+    clear_selected!(game)
+    remove_components!(gui)
+    generate_gui!(game, gui)
+end
+
+function generate_gui(; width=700, height=600)
     game = Game()
     generate_gui(game; width, height)
 end
 
-function generate_gui(game; width=900, height=700)
+function generate_gui(game; width=700, height=600)
     win = GtkWindow("Two Dots", width, height)
     generate_gui!(game, win)
     return win
@@ -111,6 +124,13 @@ function make_grey!(button, dot, style)
     set_gtk_property!(label, :name, string(dot.color,"_clicked"))
 end
 
+function make_all_grey!(gui, game, style)
+    for (button,dot) in zip(gui[1][3],game.dots)
+        make_grey!(button, dot, style)
+    end
+    return nothing
+end
+
 function click_submit(button, game, style, gui)
     game_over!(game) ? (return nothing) : nothing
     update_round!(game, gui)
@@ -121,6 +141,7 @@ function click_submit(button, game, style, gui)
     shift_colors!(game, gui, style)
     set_unselected!(game)
     clear_selected!(game)
+    game_over!(game) ? make_all_grey!(gui, game, style) : nothing
     return nothing
 end
 
@@ -190,6 +211,7 @@ function click_dot(button, game, gui, provider, dot)
 end
 
 function can_select(game, dot)
+    game_over!(game) ? (return false) : nothing
     dots = game.selected_dots
     # first dot
     if isempty(dots)
@@ -240,4 +262,10 @@ add_dot!(game::Game, dot) = add_dot!(game.selected_dots, dot)
 
 function add_dot!(selected_dots, dot)
     push!(selected_dots, dot)
+end
+
+function remove_components!(gui)
+    for g in gui
+        delete!(gui, g)
+    end
 end

@@ -18,7 +18,7 @@ mutable struct Game
     visible::Bool
 end
 
-function Game(;n_rows=10, n_cols=10, n_rounds=30, round=n_rounds, visible=true)
+function Game(;n_rows=8, n_cols=8, n_rounds=30, round=n_rounds, visible=true)
     dots = populate(n_rows, n_cols)
     rand_color!.(dots)
     Game(dots, Dot[], n_rounds, round, 0, visible)
