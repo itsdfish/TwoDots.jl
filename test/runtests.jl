@@ -1,8 +1,8 @@
 using SafeTestsets
 
 @safetestset "is rectangular" begin
-    using Test
-    import TwoDots: is_rectangular, Game
+    using Test, TwoDots
+    import TwoDots: is_rectangular
     game = Game(;n_rows=8, n_cols=8)
     map(x->x.color = "green", game.dots)
     push!(game.selected_dots, game.dots[1,1])

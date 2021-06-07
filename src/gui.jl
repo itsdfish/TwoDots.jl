@@ -101,15 +101,6 @@ function generate_gui!(game, win)
     showall(win)
 end
 
-select_all_color!(game) = select_all_color!(game.dots, game.selected_dots)
-
-function select_all_color!(dots, selected_dots)
-    color = selected_dots[1].color
-    color_dots = filter(x->x.color == color, dots)
-    map(x->x.selected = true, color_dots)
-    return color_dots
-end
-
 function add_color!(button, dot, style)
     label = button[1]
     sc = Gtk.GAccessor.style_context(label)
@@ -145,10 +136,6 @@ function click_submit(button, game, style, gui)
     return nothing
 end
 
-function clear_selected!(game)
-    empty!(game.selected_dots)
-end
-
 function shift_colors!(game, gui, style)
     for dot in game.selected_dots
         shift_color!(dot, game, gui, style)
@@ -169,20 +156,6 @@ function shift_color!(dot, game, gui, style)
     add_color!(buttons[col,row], dots[row,col], style)
 end
 
-set_unselected!(game::Game) = set_unselected!(game.selected_dots)
-
-function set_unselected!(dots)
-    map(x->x.selected=false, dots)
-end
-
-function update_score!(game)
-    game.score += length(game.selected_dots)
-end
-
-function update_round!(game)
-    game.round -= 1
-end
-
 function update_round!(game, gui)
     update_round!(game)
     score = gui[1][2][2]
@@ -194,74 +167,6 @@ function update_score!(game, gui)
     counter = gui[1][2][4]
     set_gtk_property!(counter, :label, string(game.score))
     return nothing
-end
-
-function click_dot(button, game, gui, provider, dot)
-    !can_select(game, dot) ? (return nothing) : nothing
-    if dot.selected
-        dot.selected = false
-        remove_dot!(game, dot)
-        add_color!(button, dot, provider)
-    else
-        dot.selected = true
-        add_dot!(game, dot)
-        make_grey!(button, dot, provider)
-    end
-    return nothing
-end
-
-function can_select(game, dot)
-    game_over!(game) ? (return false) : nothing
-    dots = game.selected_dots
-    # first dot
-    if isempty(dots)
-        return true 
-    end
-    # unclick last last clicked dot
-    if dot == dots[end]
-        return true 
-    end
-    # cannot select dot again
-    if dot ∈ dots
-        return false 
-    end
-    # colors do not match
-    if dots[end].color != dot.color
-        return false
-    end
-    # not adjecent 
-    if !is_adjecent(dots[end], dot)
-        return false
-    end
-    return true
-end
-
-function is_adjecent(dot1, dot2)
-    if (dot1.row + 1 == dot2.row) && (dot1.col == dot2.col)
-        return true 
-    end 
-    if (dot1.row - 1 == dot2.row) && (dot1.col == dot2.col)
-        return true 
-    end 
-    if (dot1.row == dot2.row) && (dot1.col == dot2.col + 1)
-        return true 
-    end 
-    if (dot1.row  == dot2.row) && (dot1.col == dot2.col - 1)
-        return true 
-    end 
-    return false
-end
-
-remove_dot!(game::Game, dot) = remove_dot!(game.selected_dots, dot)
-
-function remove_dot!(selected_dots, dot)
-    filter!(x->x != dot, selected_dots)
-end
-
-add_dot!(game::Game, dot) = add_dot!(game.selected_dots, dot)
-
-function add_dot!(selected_dots, dot)
-    push!(selected_dots, dot)
 end
 
 function remove_components!(gui)
