@@ -188,6 +188,7 @@ function click_submit(dot, game)
         game.selected_dots = select_all_color!(game)
     end
     update_score!(game)
+    sort_by_row!(game)
     shift_colors!(game)
     set_unselected!(game)
     clear_selected!(game)

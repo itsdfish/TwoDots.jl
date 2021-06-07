@@ -15,7 +15,6 @@ end
 start_new_game!(x, gui, game) = start_new_game!(gui, game)
 
 function start_new_game!(gui, game)
-    println("start new game")
     game.score = 0
     game.round = game.n_rounds
     rand_color!.(game.dots)
@@ -84,8 +83,6 @@ function generate_gui!(game, win)
     for r in 1:n_rows, c in 1:n_cols
         b = GtkButton("")
         dot = game.dots[r,c]
-        label = GtkLabel("•")
-        push!(b, label)
         add_color!(b, dot, style)
         g[c,r] = b
         signal_connect(x->click_dot(x, game, win, style, dot), b, "clicked")
@@ -124,17 +121,29 @@ end
 
 function click_submit(button, game, style, gui)
     game_over!(game) ? (return nothing) : nothing
+    not_connected(game) ? (return nothing) : nothing
     update_round!(game, gui)
     if is_rectangular(game)
         game.selected_dots = select_all_color!(game)
     end
     update_score!(game, gui)
+    sort_by_row!(game)
     shift_colors!(game, gui, style)
     set_unselected!(game)
     clear_selected!(game)
     game_over!(game) ? make_all_grey!(gui, game, style) : nothing
     return nothing
 end
+
+sort_by_row!(game::Game) = sort_by_row!(game.selected_dots)
+
+function sort_by_row!(dots)
+    rows = map(x->x.row, dots)
+    idx = sortperm(rows)
+    dots .= dots[idx]
+end
+
+not_connected(game) = length(game.selected_dots) < 2
 
 function shift_colors!(game, gui, style)
     for dot in game.selected_dots
