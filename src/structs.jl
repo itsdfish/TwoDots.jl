@@ -1,3 +1,13 @@
+"""
+    Dot(;color="", selected=false, col, row)
+
+Generates a dot object containing the following elements:
+
+- `color`: color of dot
+- `selected`: dot is selected if true
+- `row`: row index 
+- `col`: col index 
+"""
 mutable struct Dot
     color::String
     selected::Bool
@@ -9,6 +19,18 @@ function Dot(;color="", selected=false, col, row)
     Dot(color, selected, row, col)
 end
 
+"""
+    Game(;n_rows=8, n_cols=8, n_rounds=30, round=n_rounds, visible=true)
+
+Generates a game object containing the following elements:
+
+- `dots`: an array of dots representing the board
+- `selected_dots`: an array of selected dots
+- `n_rounds`: the number of rounds in a game 
+- `round`: current round 
+- `score`: the number of connected dots
+- `visible`: display GUI if true
+"""
 mutable struct Game
     dots::Array{Dot,2}
     selected_dots::Vector{Dot}

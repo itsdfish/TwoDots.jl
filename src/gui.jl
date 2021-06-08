@@ -24,6 +24,100 @@ function start_new_game!(gui, game)
     generate_gui!(game, gui)
 end
 
+function setup_game(x, game, gui)
+    popup = GtkWindow("Setup")
+    base_panel = GtkBox(:v)
+    push!(popup, base_panel)
+    grid = GtkGrid()
+    col_label = GtkLabel("Number of Columns")
+    row_label = GtkLabel("Number of Rows")
+    round_label = GtkLabel("Number of Rounds")
+    col_entry = GtkEntry(name="col_value")
+    row_entry = GtkEntry(name="row_value")
+    round_entry = GtkEntry(name="round_value")
+    grid[1,1] = col_label
+    grid[2,1] = col_entry
+    grid[1,2] = row_label
+    grid[2,2] = row_entry
+    grid[1,3] = round_label
+    grid[2,3] = round_entry
+    GAccessor.justify(col_label, Gtk.GConstants.GtkJustification.LEFT)
+    GAccessor.justify(row_label, Gtk.GConstants.GtkJustification.LEFT)
+    set_gtk_property!(grid, :column_spacing, 5)  # introduce a 15-pixel gap between columns
+    set_gtk_property!(grid, :row_spacing, 5)
+    set_gtk_property!(grid, :column_homogeneous, true)
+    set_gtk_property!(grid, :row_homogeneous, true)
+    push!(base_panel, grid)
+    ok_button = GtkButton("OK")
+    components = (col_entry=col_entry, row_entry=row_entry, round_entry=round_entry, popup=popup)
+    signal_connect(x-> modify_game(x, components, game, gui), ok_button, "clicked")
+    cancel_button = GtkButton("Cancel")
+    signal_connect(x->close_window(x, popup), cancel_button, "clicked")
+    hbox = GtkButtonBox(:h)
+    set_gtk_property!(hbox, :expand, ok_button, true)
+    set_gtk_property!(hbox, :spacing, 10)
+    push!(base_panel, hbox)
+    push!(hbox, cancel_button)
+    push!(hbox, ok_button)
+    showall(popup)
+end
+
+function modify_game(x, c, game, gui)
+    str_cols = get_gtk_property(c.col_entry, :text, String)
+    str_rows = get_gtk_property(c.row_entry, :text, String)
+    str_rounds = get_gtk_property(c.round_entry, :text, String)
+
+    is_error,n_cols = parse_value(str_cols, "Columns")
+    is_error ? (return nothing) : nothing
+
+    is_error,n_rows = parse_value(str_rows, "Rows")
+    is_error ? (return nothing) : nothing
+
+    is_error,n_rounds = parse_value(str_rounds, "Rounds")
+    is_error ? (return nothing) : nothing
+
+    game = Game(; n_rows, n_cols, n_rounds)
+    start_new_game!(gui, game)
+    close_window(c.popup)
+    return nothing
+end
+
+function parse_value(value, label)
+    number = 0
+    try 
+        number = parse(Int, value)
+    catch
+        error_popup("$label must be a number")
+        return true,-1
+    end
+    if number < 1
+        is_error = true
+        error_popup("$label must be greater than 1")
+        return true,-1
+    end
+    return false,number
+end
+
+function error_popup(error_message)
+    error_window = GtkWindow("Error")
+    base_panel = GtkBox(:v)
+    set_gtk_property!(base_panel, :spacing, 20)
+    message = GtkLabel(error_message)
+    ok_button = GtkButton("OK")
+    push!(error_window, base_panel)
+    push!(base_panel, message)
+    push!(base_panel, ok_button)
+    signal_connect(x->close_window(x, error_window), ok_button, "clicked")
+    showall(error_window)
+    return nothing
+end
+
+close_window(_, component) = close_window(component)
+
+function close_window(component)
+    hide(component)
+end
+
 function generate_gui(; width=700, height=600)
     game = Game()
     generate_gui(game; width, height)
@@ -134,16 +228,6 @@ function click_submit(button, game, style, gui)
     game_over!(game) ? make_all_grey!(gui, game, style) : nothing
     return nothing
 end
-
-sort_by_row!(game::Game) = sort_by_row!(game.selected_dots)
-
-function sort_by_row!(dots)
-    rows = map(x->x.row, dots)
-    idx = sortperm(rows)
-    dots .= dots[idx]
-end
-
-not_connected(game) = length(game.selected_dots) < 2
 
 function shift_colors!(game, gui, style)
     for dot in game.selected_dots

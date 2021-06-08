@@ -164,6 +164,16 @@ function clear_selected!(game)
     empty!(game.selected_dots)
 end
 
+sort_by_row!(game::Game) = sort_by_row!(game.selected_dots)
+
+function sort_by_row!(dots)
+    rows = map(x->x.row, dots)
+    idx = sortperm(rows)
+    dots .= dots[idx]
+end
+
+not_connected(game) = length(game.selected_dots) < 2
+
 function shift_colors!(game)
     for dot in game.selected_dots
         shift_color!(dot, game)
