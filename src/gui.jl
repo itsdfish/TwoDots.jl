@@ -267,3 +267,8 @@ function remove_components!(gui)
         delete!(gui, g)
     end
 end
+
+function start()
+    game = Game()
+    gui = generate_gui(game)
+end

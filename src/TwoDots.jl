@@ -13,7 +13,7 @@ gui = generate_gui(game)
 """
 module TwoDots
     using Gtk, Cairo, Gtk.ShortNames
-    export Dot, Game, generate_gui
+    export Dot, Game, generate_gui, start
     
     include("structs.jl")
     include("functions.jl")
