@@ -130,7 +130,8 @@ function generate_gui(game; width=700, height=600)
 end
 
 function generate_gui!(game, win)
-    style = CssProviderLeaf(filename = "../src/style.css")
+    filename = joinpath(@__DIR__, "style.css")
+    style = CssProviderLeaf(;filename)
     base_panel = GtkBox(:v, name="base_panel")
     menu_bar = setup_menu(win, game)
     push!(base_panel, menu_bar)
