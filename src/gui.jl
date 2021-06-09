@@ -180,7 +180,7 @@ function generate_gui!(game, win)
         dot = game.dots[r,c]
         add_color!(b, dot, style)
         g[c,r] = b
-        signal_connect(x->click_dot(x, game, win, style, dot), b, "clicked")
+        signal_connect(x->click_dot(game, dot, win, x, style), b, "clicked")
     end
     set_gtk_property!(g, :column_spacing, 5)
     set_gtk_property!(g, :row_spacing, 5)
@@ -191,6 +191,20 @@ function generate_gui!(game, win)
     
     push!(win, base_panel)
     showall(win)
+end
+
+function click_dot(game, dot, gui, button, provider)
+    !can_select(game, dot) ? (return nothing) : nothing
+    if dot.selected
+        dot.selected = false
+        remove_dot!(game, dot)
+        add_color!(button, dot, provider)
+    else
+        dot.selected = true
+        add_dot!(game, dot)
+        make_grey!(button, dot, provider)
+    end
+    return nothing
 end
 
 function add_color!(button, dot, style)

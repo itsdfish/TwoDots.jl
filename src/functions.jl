@@ -1,11 +1,55 @@
-function rand_color!(x::Dot)
-    x.color = rand(["red","blue","yellow","green","orange"])
+function click_dot(game, dot)
+    !can_select(game, dot) ? (return nothing) : nothing
+    if dot.selected
+        dot.selected = false
+        remove_dot!(game, dot)
+    else
+        dot.selected = true
+    end
     return nothing
 end
 
-populate(n_rows, n_cols) = [Dot(;row, col) for row in 1:n_rows, col in 1:n_cols]
+function can_select(game, dot)
+    game_over!(game) ? (return false) : nothing
+    dots = game.selected_dots
+    # first dot
+    if isempty(dots)
+        return true 
+    end
+    # unclick last last clicked dot
+    if dot == dots[end]
+        return true 
+    end
+    # cannot select dot again
+    if dot ∈ dots
+        return false 
+    end
+    # colors do not match
+    if dots[end].color != dot.color
+        return false
+    end
+    # not adjecent 
+    if !is_adjecent(dots[end], dot)
+        return false
+    end
+    return true
+end
 
-game_over!(game) = game.round == 0
+function is_adjecent(dot1, dot2)
+    if (dot1.row + 1 == dot2.row) && (dot1.col == dot2.col)
+        return true 
+    end 
+    if (dot1.row - 1 == dot2.row) && (dot1.col == dot2.col)
+        return true 
+    end 
+    if (dot1.row == dot2.row) && (dot1.col == dot2.col + 1)
+        return true 
+    end 
+    if (dot1.row  == dot2.row) && (dot1.col == dot2.col - 1)
+        return true 
+    end 
+    return false
+end
 
 function max_coords(dots)
     min_row = minimum(x->x.row, dots)
@@ -69,6 +113,15 @@ function trace_rectangle(dots, min_row, max_row, min_col, max_col)
     return true
 end
 
+function rand_color!(x::Dot)
+    x.color = rand(["red","blue","yellow","green","orange"])
+    return nothing
+end
+
+populate(n_rows, n_cols) = [Dot(;row, col) for row in 1:n_rows, col in 1:n_cols]
+
+game_over!(game) = game.round == 0
+
 set_unselected!(game::Game) = set_unselected!(game.selected_dots)
 
 function set_unselected!(dots)
@@ -81,62 +134,6 @@ end
 
 function update_round!(game)
     game.round -= 1
-end
-
-function click_dot(button, game, gui, provider, dot)
-    !can_select(game, dot) ? (return nothing) : nothing
-    if dot.selected
-        dot.selected = false
-        remove_dot!(game, dot)
-        add_color!(button, dot, provider)
-    else
-        dot.selected = true
-        add_dot!(game, dot)
-        make_grey!(button, dot, provider)
-    end
-    return nothing
-end
-
-function can_select(game, dot)
-    game_over!(game) ? (return false) : nothing
-    dots = game.selected_dots
-    # first dot
-    if isempty(dots)
-        return true 
-    end
-    # unclick last last clicked dot
-    if dot == dots[end]
-        return true 
-    end
-    # cannot select dot again
-    if dot ∈ dots
-        return false 
-    end
-    # colors do not match
-    if dots[end].color != dot.color
-        return false
-    end
-    # not adjecent 
-    if !is_adjecent(dots[end], dot)
-        return false
-    end
-    return true
-end
-
-function is_adjecent(dot1, dot2)
-    if (dot1.row + 1 == dot2.row) && (dot1.col == dot2.col)
-        return true 
-    end 
-    if (dot1.row - 1 == dot2.row) && (dot1.col == dot2.col)
-        return true 
-    end 
-    if (dot1.row == dot2.row) && (dot1.col == dot2.col + 1)
-        return true 
-    end 
-    if (dot1.row  == dot2.row) && (dot1.col == dot2.col - 1)
-        return true 
-    end 
-    return false
 end
 
 remove_dot!(game::Game, dot) = remove_dot!(game.selected_dots, dot)
@@ -191,7 +188,7 @@ function shift_color!(dot, game)
     rand_color!(dots[row,col])
 end
 
-function click_submit(dot, game)
+function click_submit(game)
     game_over!(game) ? (return nothing) : nothing
     update_round!(game)
     if is_rectangular(game)
