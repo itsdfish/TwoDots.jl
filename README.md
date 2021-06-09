@@ -6,6 +6,5 @@ The goal of TwoDots is to earn as many points as possible by connecting dots of 
 
 ```julia
 using TwoDots
-game = Game()
-gui = generate_gui(game)
+start()
 ```

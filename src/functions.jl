@@ -1,12 +1,15 @@
-function click_dot(game, dot)
-    !can_select(game, dot) ? (return nothing) : nothing
+click_dot!(game, dot, gui::Nothing, button) = click_dot!(game, dot)
+
+function click_dot!(game, dot)
+    !can_select(game, dot) ? (return false) : nothing
     if dot.selected
         dot.selected = false
         remove_dot!(game, dot)
     else
         dot.selected = true
+        add_dot!(game, dot)
     end
-    return nothing
+    return true
 end
 
 function can_select(game, dot)
@@ -188,8 +191,11 @@ function shift_color!(dot, game)
     rand_color!(dots[row,col])
 end
 
-function click_submit(game)
-    game_over!(game) ? (return nothing) : nothing
+click_submit!(game, gui::Nothing, button, style) = click_submit!(game)
+
+function click_submit!(game)
+    game_over!(game) ? (return false) : nothing
+    not_connected(game) ? (return false) : nothing
     update_round!(game)
     if is_rectangular(game)
         game.selected_dots = select_all_color!(game)
@@ -199,5 +205,5 @@ function click_submit(game)
     shift_colors!(game)
     set_unselected!(game)
     clear_selected!(game)
-    return nothing
+    return true
 end

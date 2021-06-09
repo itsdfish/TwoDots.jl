@@ -1,7 +1,7 @@
 name = "TwoDots"
 uuid = "6b60b763-0cec-4562-851a-49a11e6530ef"
 authors = ["itsdfish"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 Cairo = "159f3aea-2a34-519c-b102-8c37f9878175"

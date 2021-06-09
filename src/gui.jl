@@ -118,22 +118,25 @@ function close_window(component)
     hide(component)
 end
 
-function generate_gui(; width=700, height=600)
-    game = Game()
-    generate_gui(game; width, height)
-end
+# function generate_gui(; width=700, height=600)
+#     game = Game()
+#     gui = generate_gui(game; width, height)
+#     #gui = GUI(;game)
+# end
 
-function generate_gui(game; width=700, height=600)
-    win = GtkWindow("Two Dots", width, height)
-    generate_gui!(game, win)
-    return win
-end
+# function generate_gui(game; width=700, height=600)
+#     gui = GtkWindow("Two Dots", width, height)
+#     generate_gui!(game, gui)
+#     return gui
+# end
 
-function generate_gui!(game, win)
-    filename = joinpath(@__DIR__, "style.css")
-    style = CssProviderLeaf(;filename)
+generate_gui!(game, gui) = generate_gui!(game, gui.gui, gui.style)
+
+function generate_gui!(game, gui, style)
+    # filename = joinpath(@__DIR__, "style.css")
+    # style = CssProviderLeaf(;filename)
     base_panel = GtkBox(:v, name="base_panel")
-    menu_bar = setup_menu(win, game)
+    menu_bar = setup_menu(gui, game)
     push!(base_panel, menu_bar)
 
     info_panel = GtkBox(:h, name="info_panel")
@@ -172,7 +175,7 @@ function generate_gui!(game, win)
     push!(sc, StyleProvider(style), 600)
 
     push!(base_panel, submit_button)
-    signal_connect(x->click_submit(x, game, style, win), submit_button, "clicked")
+    signal_connect(_->click_submit!(game, gui, style), submit_button, "clicked")
 
     n_rows,n_cols = size(game.dots)
     for r in 1:n_rows, c in 1:n_cols
@@ -180,7 +183,7 @@ function generate_gui!(game, win)
         dot = game.dots[r,c]
         add_color!(b, dot, style)
         g[c,r] = b
-        signal_connect(x->click_dot(game, dot, win, x, style), b, "clicked")
+        signal_connect(x->click_dot!(game, dot, gui, x, style), b, "clicked")
     end
     set_gtk_property!(g, :column_spacing, 5)
     set_gtk_property!(g, :row_spacing, 5)
@@ -189,22 +192,25 @@ function generate_gui!(game, win)
     set_gtk_property!(g, :expand, true)
     #set_gtk_property!(info_panel, :fill, label, 0)
     
-    push!(win, base_panel)
-    showall(win)
+    push!(gui, base_panel)
+    showall(gui)
 end
 
-function click_dot(game, dot, gui, button, provider)
-    !can_select(game, dot) ? (return nothing) : nothing
+get_button(gui, dot) = gui[1][3][dot.row,dot.col]
+
+function click_dot!(game, dot, gui::GUI)
+    button = get_button(gui, dot)
+    return click_dot!(game, dot, gui.gui, button, gui.style)
+end
+
+function click_dot!(game, dot, gui, button, style)
+    !click_dot!(game, dot) ? (return false) : nothing
     if dot.selected
-        dot.selected = false
-        remove_dot!(game, dot)
-        add_color!(button, dot, provider)
+        make_grey!(button, dot, style)
     else
-        dot.selected = true
-        add_dot!(game, dot)
-        make_grey!(button, dot, provider)
+        add_color!(button, dot, style)
     end
-    return nothing
+    return true
 end
 
 function add_color!(button, dot, style)
@@ -228,19 +234,26 @@ function make_all_grey!(gui, game, style)
     return nothing
 end
 
-function click_submit(button, game, style, gui)
-    game_over!(game) ? (return nothing) : nothing
-    not_connected(game) ? (return nothing) : nothing
+click_submit!(game, gui::GUI) = click_submit!(game, gui.gui, gui.style)
+
+function click_submit!(game, gui, style)
+    !click_submit!(game) ? (return false) : nothing 
     update_round!(game, gui)
-    if is_rectangular(game)
-        game.selected_dots = select_all_color!(game)
-    end
     update_score!(game, gui)
-    sort_by_row!(game)
-    shift_colors!(game, gui, style)
-    set_unselected!(game)
-    clear_selected!(game)
+    update_all_colors!(game, gui, style)
     game_over!(game) ? make_all_grey!(gui, game, style) : nothing
+    return true
+end
+
+function update_all_colors!(game, gui, style)
+    dots = game.dots
+    n_rows,n_cols = size(dots)
+    buttons = gui[1][3]
+    for r in 1:n_rows
+        for c in 1:n_cols
+            add_color!(buttons[c,r], dots[r,c], style)
+        end
+    end
     return nothing
 end
 
@@ -265,13 +278,11 @@ function shift_color!(dot, game, gui, style)
 end
 
 function update_round!(game, gui)
-    update_round!(game)
     score = gui[1][2][2]
     set_gtk_property!(score, :label, string(game.round))
 end 
 
 function update_score!(game, gui)
-    update_score!(game)
     counter = gui[1][2][4]
     set_gtk_property!(counter, :label, string(game.score))
     return nothing
@@ -284,6 +295,5 @@ function remove_components!(gui)
 end
 
 function start()
-    game = Game()
-    gui = generate_gui(game)
+    GUI()
 end

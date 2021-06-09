@@ -7,13 +7,13 @@ The goal of TwoDots is to earn as many points as possible by connecting dots of 
 
 ```julia
 using TwoDots
-game = Game()
-gui = generate_gui(game)
+start()
 ```
 """
 module TwoDots
     using Gtk, Cairo, Gtk.ShortNames
-    export Dot, Game, generate_gui, start
+    export Dot, Game, GUI, start
+    export click_dot!, click_submit!, can_select
     
     include("structs.jl")
     include("functions.jl")

@@ -60,7 +60,7 @@ end
 
 @safetestset "click submit" begin
     using Test, TwoDots
-    import TwoDots: click_submit
+    import TwoDots: click_submit!
 
     game = Game(n_rows=6, n_cols=2)
     game.dots[1,1].color = "green"
@@ -74,7 +74,7 @@ end
     push!(game.selected_dots, game.dots[3,1])
     push!(game.selected_dots, game.dots[5,1])
 
-    click_submit(game)
+    click_submit!(game)
 
     @test isempty(game.selected_dots)
 
@@ -98,7 +98,7 @@ end
     push!(game.selected_dots, game.dots[5,1])
     push!(game.selected_dots, game.dots[3,1])
 
-    click_submit(game)
+    click_submit!(game)
 
     @test isempty(game.selected_dots)
 

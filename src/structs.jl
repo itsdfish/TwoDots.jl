@@ -47,3 +47,17 @@ function Game(;n_rows=8, n_cols=8, n_rounds=30, round=n_rounds, visible=true)
 end
 
 Broadcast.broadcastable(x::Game) = Ref(x)
+
+mutable struct GUI{G,S}
+    gui::G
+    style::S
+end
+
+function GUI(;width=700, height=600, game = Game())
+    gui = GtkWindow("Two Dots", width, height)
+    filename = joinpath(@__DIR__, "style.css")
+    println(filename)
+    style = CssProviderLeaf(;filename)
+    generate_gui!(game, gui, style)
+    GUI(gui, style)
+end
