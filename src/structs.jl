@@ -5,18 +5,20 @@ Generates a dot object containing the following elements:
 
 - `color`: color of dot
 - `selected`: dot is selected if true
+- `updated`: indicates whether color updated in gui
 - `row`: row index 
 - `col`: col index 
 """
 mutable struct Dot
     color::String
     selected::Bool
+    updated::Bool
     row::Int
     col::Int
 end
 
 function Dot(;color="", selected=false, col, row)
-    Dot(color, selected, row, col)
+    Dot(color, selected, true, row, col)
 end
 
 """
@@ -56,7 +58,6 @@ end
 function GUI(;width=700, height=600, game = Game())
     gui = GtkWindow("Two Dots", width, height)
     filename = joinpath(@__DIR__, "style.css")
-    println(filename)
     style = CssProviderLeaf(;filename)
     generate_gui!(game, gui, style)
     GUI(gui, style)

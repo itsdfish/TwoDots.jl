@@ -3,9 +3,11 @@ function setup_menu(gui, game)
     file = GtkMenuItem("_File")
     file_menu = GtkMenu(file, name="file_menu")
     new_game = GtkMenuItem("New Game", name="new_game")
+
     signal_connect(x->start_new_game!(x, gui, game), new_game, :activate)
     push!(file_menu, new_game)
     setup = GtkMenuItem("Setup", name="setup")
+
     signal_connect(x->setup_game(x, game, gui), setup, :activate)
     push!(file_menu, setup)
     push!(mb, file)
@@ -21,7 +23,9 @@ function start_new_game!(gui, game)
     map(x->x.selected = false, game.dots)
     clear_selected!(game)
     remove_components!(gui)
-    generate_gui!(game, gui)
+    filename = joinpath(@__DIR__, "style.css")
+    style = CssProviderLeaf(;filename)
+    generate_gui!(game, gui, style)
 end
 
 function setup_game(x, game, gui)
@@ -118,23 +122,9 @@ function close_window(component)
     hide(component)
 end
 
-# function generate_gui(; width=700, height=600)
-#     game = Game()
-#     gui = generate_gui(game; width, height)
-#     #gui = GUI(;game)
-# end
-
-# function generate_gui(game; width=700, height=600)
-#     gui = GtkWindow("Two Dots", width, height)
-#     generate_gui!(game, gui)
-#     return gui
-# end
-
 generate_gui!(game, gui) = generate_gui!(game, gui.gui, gui.style)
 
 function generate_gui!(game, gui, style)
-    # filename = joinpath(@__DIR__, "style.css")
-    # style = CssProviderLeaf(;filename)
     base_panel = GtkBox(:v, name="base_panel")
     menu_bar = setup_menu(gui, game)
     push!(base_panel, menu_bar)

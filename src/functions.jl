@@ -1,7 +1,6 @@
-click_dot!(game, dot, gui::Nothing, button) = click_dot!(game, dot)
-
 function click_dot!(game, dot)
     !can_select(game, dot) ? (return false) : nothing
+    dot.updated = false
     if dot.selected
         dot.selected = false
         remove_dot!(game, dot)
