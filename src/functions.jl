@@ -1,6 +1,8 @@
+
+click_dot!(game, dot, gui::Nothing) = click_dot!(game, dot)
+
 function click_dot!(game, dot)
     !can_select(game, dot) ? (return false) : nothing
-    dot.updated = false
     if dot.selected
         dot.selected = false
         remove_dot!(game, dot)
@@ -190,7 +192,7 @@ function shift_color!(dot, game)
     rand_color!(dots[row,col])
 end
 
-click_submit!(game, gui::Nothing, button, style) = click_submit!(game)
+click_submit!(game, gui::Nothing) = click_submit!(game)
 
 function click_submit!(game)
     game_over!(game) ? (return false) : nothing

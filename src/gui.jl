@@ -180,13 +180,12 @@ function generate_gui!(game, gui, style)
     set_gtk_property!(g, :column_homogeneous, true)
     set_gtk_property!(g, :row_homogeneous, true)
     set_gtk_property!(g, :expand, true)
-    #set_gtk_property!(info_panel, :fill, label, 0)
     
     push!(gui, base_panel)
     showall(gui)
 end
 
-get_button(gui, dot) = gui[1][3][dot.row,dot.col]
+get_button(gui, dot) = gui.gui[1][3][dot.col,dot.row]
 
 function click_dot!(game, dot, gui::GUI)
     button = get_button(gui, dot)
@@ -214,7 +213,7 @@ function make_grey!(button, dot, style)
     label = button[1]
     sc = Gtk.GAccessor.style_context(label)
     push!(sc, StyleProvider(style), 600)
-    set_gtk_property!(label, :name, string(dot.color,"_clicked"))
+    set_gtk_property!(label, :name, string(dot.color, "_clicked"))
 end
 
 function make_all_grey!(gui, game, style)

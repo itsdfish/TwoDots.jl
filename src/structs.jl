@@ -5,20 +5,18 @@ Generates a dot object containing the following elements:
 
 - `color`: color of dot
 - `selected`: dot is selected if true
-- `updated`: indicates whether color updated in gui
 - `row`: row index 
 - `col`: col index 
 """
 mutable struct Dot
     color::String
     selected::Bool
-    updated::Bool
     row::Int
     col::Int
 end
 
 function Dot(;color="", selected=false, col, row)
-    Dot(color, selected, true, row, col)
+    Dot(color, selected, row, col)
 end
 
 """
