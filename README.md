@@ -8,3 +8,7 @@ The goal of TwoDots is to earn as many points as possible by connecting dots of 
 using TwoDots
 start()
 ```
+
+# Additional Features
+
+In TwoDots.jl, the game and GUI components are designed to be modular. This allows the game to be played by a simulated agent with an optional GUI. Please see [TwoDotsModels.jl](https://github.com/itsdfish/TwoDotsModels.jl) for a simple example of building a simulated agent for the game TwoDots.  
