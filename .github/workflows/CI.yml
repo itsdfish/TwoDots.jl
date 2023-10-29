@@ -15,13 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         julia-version:
-          - "1.6"
-          - "1"
+          - "1.9"
           - "nightly"
         os:
           - ubuntu-latest
         julia-arch:
-          - x64
           - x86
         include:
           - os: ubuntu-latest
